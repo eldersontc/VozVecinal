@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Basura en la vía pública</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div id="map_canvas">
+      <div padding>
+          <button *ngIf="!enableGps" ion-button color="light" (click)="solicitarGps()" icon-end>
+            Activar los servicios de ubicación
+            <ion-icon name='arrow-forward'></ion-icon>
+          </button>
+      </div>
+      <ion-fab left middle *ngIf="enableGps">
+        <button ion-fab color="secondary" (click)="onShowOptions($event)">
+          <ion-icon name="share"></ion-icon>
+        </button>
+      </ion-fab>
+  </div>
+</ion-content>
