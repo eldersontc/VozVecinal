@@ -7,7 +7,7 @@ export class ComentarioProvider {
 
   constructor(public http: HttpClient) {}
 
-  private apiURL = 'https://190.234.66.232:88/api/comentario';
+  private apiURL = 'http://190.234.66.232:88/api/comentario';
 
   create(params: IComentario): Observable<boolean> {
       return this.http.post<boolean>(this.apiURL, params);

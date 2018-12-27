@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, Platform, ActionSheetController, LoadingController, AlertController, Loading } from 'ionic-angular';
-import { GoogleMap, GoogleMaps, GoogleMapOptions, GoogleMapsEvent, LatLng } from '@ionic-native/google-maps';
+import { GoogleMap, GoogleMaps, GoogleMapsEvent, Marker } from '@ionic-native/google-maps';
 import { Camera } from '@ionic-native/camera';
 import { Device } from '@ionic-native/device';
 import { Diagnostic } from '@ionic-native/diagnostic';
@@ -15,7 +15,7 @@ export class IncidenciaPage {
 
   map: GoogleMap;
 
-  constructor(public navCtrl: NavController, 
+  constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public platform: Platform,
     public googlemaps: GoogleMaps,
@@ -29,75 +29,77 @@ export class IncidenciaPage {
     public incidenciaPrv: IncidenciaProvider) {
   }
 
-  ionViewDidLoad(){
-    this.validarGps();
+  ionViewDidLoad() {
+    this.verifyGPS();
   }
 
   enableGps: boolean = false;
 
-  validarGps(){
-    this.diagnostic.isLocationEnabled().then(resultado =>{
-      this.enableGps = resultado;
-      this.crearMapa();
-      if(!resultado){
-        this.solicitarGps();
+  verifyGPS() {
+    this.diagnostic.isLocationEnabled().then(data => {
+      this.enableGps = data;
+      this.makeMap();
+      if (!data) {
+        this.requestGPS();
       }
-    }).catch(error => {
-      console.log(error);
     });
   }
 
-  solicitarGps(){
-    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+  marker: Marker;
 
-      if(canRequest) {
-        // the accuracy option will be ignored by iOS
-        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
-          () => {
-            this.enableGps = true;
-            this.map.setMyLocationButtonEnabled(true);
-            this.moveCamera();
-          },
-          error => {
-            console.log('Error requesting location permissions')
-          }
-        );
-      }
-    
-    });
-  }
-
-  crearMapa(){
-    let opcionesMapa: GoogleMapOptions = {
-      mapType: 'MAP_TYPE_TERRAIN',
-      controls: {
-        compass: true,
-        myLocation: true,
-        myLocationButton: this.enableGps,
-        zoom: true
-      }
-    };
-
-    this.map = this.googlemaps.create('map_canvas', opcionesMapa);
-    this.map.one(GoogleMapsEvent.MAP_READY).then(resultado => {
-        if(this.enableGps){
-          this.moveCamera();
-        }
-      }
-    ).catch(error =>{
-        console.log(error);
-      }
-    );
-  }
-
-  moveCamera(){
-    this.map.getMyLocation().then(respuesta => {
+  moveCamera() {
+    this.map.getMyLocation().then(data => {
       this.map.moveCamera({
-        target: respuesta.latLng,
+        target: data.latLng,
         zoom: 18,
       });
-    }).catch(error => {
-      console.log(error);
+      if (this.marker) {
+        this.marker.setPosition(data.latLng);
+      } else {
+        this.marker = this.map.addMarkerSync({
+          map: this.map,
+          icon: 'red',
+          animation: 'DROP',
+          position: data.latLng,
+          draggable: true
+        });
+      }
+    });
+  }
+
+  requestGPS() {
+    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+      if (canRequest) {
+        // the accuracy option will be ignored by iOS
+        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(() => {
+          this.enableGps = true;
+          this.map.setMyLocationButtonEnabled(true);
+          this.moveCamera();
+        });
+      }
+    });
+  }
+
+  makeMap() {
+    this.map = this.googlemaps.create('map_canvas',
+      {
+        mapType: 'MAP_TYPE_TERRAIN',
+        controls: {
+          compass: true,
+          myLocation: true,
+          myLocationButton: this.enableGps,
+          zoom: true
+        }
+      });
+
+    this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
+      if (this.enableGps) {
+        this.moveCamera();
+      }
+    });
+
+    this.map.on(GoogleMapsEvent.MY_LOCATION_BUTTON_CLICK).subscribe(() => {
+      this.moveCamera();
     });
   }
 
@@ -112,8 +114,8 @@ export class IncidenciaPage {
 
   showConfirm() {
     const alert = this.alertCtrl.create({
-      title: 'Enviado!',
-      subTitle: 'Gracias por contribuir a mantener limpio nuestro distrito.',
+      title: 'Enviado',
+      subTitle: 'Gracias por contribuir en la limpieza del distrito.',
       buttons: ['OK']
     });
     alert.present();
@@ -121,38 +123,27 @@ export class IncidenciaPage {
 
   showError() {
     const alert = this.alertCtrl.create({
-      title: 'Ups!',
-      subTitle: 'Ocurrió un error al enviar tu reporte.',
+      title: 'Error',
+      subTitle: 'Revisa tu conexión a internet.',
       buttons: ['OK']
     });
     alert.present();
   }
 
-  prepareCreate(foto: string = ''){
+  create(foto: any = undefined) {
     this.presentLoading("Enviando...");
-    this.map.getMyLocation().then(respuesta => {
-        this.crearIncidencia(foto, respuesta.latLng);
-      }
-    ).catch(error => {
-        this.loading.dismiss();
-        console.log(error);
-      }
-    );
-  }
-
-  crearIncidencia(foto: string = '', latLng: LatLng){
     this.incidenciaPrv.create({
-      latitud: latLng.lat,
-      longitud: latLng.lng,
+      latitud: this.marker.getPosition().lat,
+      longitud: this.marker.getPosition().lng,
       base64: foto,
-      foto: foto ? true: false,
+      foto: foto ? true : false,
       fabricante: this.device.manufacturer,
       modelo: this.device.model,
       plataforma: this.device.platform,
       version: this.device.version,
       serial: this.device.serial,
       UUID: this.device.uuid
-    }).subscribe(data =>{
+    }).subscribe(() => {
       this.loading.dismiss();
       this.showConfirm();
     }, error => {
@@ -167,32 +158,32 @@ export class IncidenciaPage {
       buttons: [
         {
           text: 'Ubicación',
-          icon: !this.platform.is('ios') ? 'navigate' : null,
+          icon: !this.platform.is('ios') ? 'pin' : null,
           handler: () => {
-            this.prepareCreate();
+            this.create();
           }
-        },{
+        }, {
           text: 'Foto',
           icon: !this.platform.is('ios') ? 'camera' : null,
           handler: () => {
-            this.capturarFoto();
+            this.takePhoto();
           }
-        },{
+        }, {
           text: 'Cancelar',
           role: 'cancel',
           icon: !this.platform.is('ios') ? 'close' : null,
-          handler: () => {}
+          handler: () => { }
         }
       ]
     });
     actionSheet.present();
   }
 
-  onShowOptions(e){
+  onShowOptions(e) {
     this.presentActionSheet();
   }
 
-  capturarFoto(){
+  takePhoto() {
     this.camera.getPicture({
       destinationType: this.camera.DestinationType.DATA_URL,
       sourceType: this.camera.PictureSourceType.CAMERA,
@@ -203,10 +194,8 @@ export class IncidenciaPage {
       targetWidth: 1024,
       correctOrientation: true,
       saveToPhotoAlbum: true
-    }).then(resultado => {
-      this.prepareCreate(resultado);
-    }).catch(error =>{
-      console.log(error);
+    }).then(data => {
+      this.create(data);
     });
   }
 

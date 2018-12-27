@@ -2,7 +2,7 @@
 <widget id="com.voz.vecinal.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Voz vecinal</name>
     <description>Una aplicación que nuestra voz sea escuchada.</description>
-    <author email="etaboada@outlook.com; cmenddez@gmail.com" href="http://ionicframework.com/">Elderson Taboada y Carlos Mendez</author>
+    <author email="eldersontc@outlook.com / crmenddez@outlook.com" href="">Elderson Taboada / Carlos Mendez</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

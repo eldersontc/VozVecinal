@@ -12,12 +12,12 @@
 
     <ion-item>
       <ion-label color="dark" stacked>Escribe tu comentario aquí</ion-label>
-      <ion-textarea [(ngModel)]="descripcion"></ion-textarea>
+      <ion-textarea [(ngModel)]="comment"></ion-textarea>
     </ion-item>
 
     <ion-item>
       <ion-label stacked>Califica del 1 al 5 la aplicación</ion-label>
-      <ion-range min="1" max="5" pin="true" [(ngModel)]="calificacion" color="info">
+      <ion-range min="1" max="5" pin="true" [(ngModel)]="range" color="info">
         <ion-icon range-left small name="star" color="info"></ion-icon>
         <ion-icon range-right name="star" color="info"></ion-icon>
       </ion-range>
@@ -26,7 +26,7 @@
   </ion-list>
 
   <div padding>
-    <button ion-button color="primary" (click)="enviar()" [disabled]="!descripcion" block icon-start>
+    <button ion-button color="primary" (click)="send()" [disabled]="!comment" block icon-start>
       <ion-icon name="send"></ion-icon>
       Enviar
     </button>

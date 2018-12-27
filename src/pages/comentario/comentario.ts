@@ -17,8 +17,8 @@ export class ComentarioPage {
     public device: Device) {
   }
 
-  descripcion: string;
-  calificacion: number = 0;
+  comment: string;
+  range: number = 0;
 
   ionViewDidLoad() {}
 
@@ -33,7 +33,7 @@ export class ComentarioPage {
 
   showConfirm() {
     const alert = this.alertCtrl.create({
-      title: 'Enviado!',
+      title: 'Enviado',
       subTitle: 'Gracias por darnos tu opinión.',
       buttons: ['OK']
     });
@@ -42,18 +42,18 @@ export class ComentarioPage {
 
   showError() {
     const alert = this.alertCtrl.create({
-      title: 'Ups!',
-      subTitle: 'Ocurrió un error al enviar opinión.',
+      title: 'Error',
+      subTitle: 'Revisa tu conexión a internet.',
       buttons: ['OK']
     });
     alert.present();
   }
 
-  enviar(){
+  send(){
     this.presentLoading();
     this.comentarioPrv.create({
-      descripcion: this.descripcion,
-      calificacion: this.calificacion,
+      descripcion: this.comment,
+      calificacion: this.range,
       fabricante: this.device.manufacturer,
       modelo: this.device.model,
       plataforma: this.device.platform,
@@ -63,8 +63,8 @@ export class ComentarioPage {
     }).subscribe(data =>{
       this.loading.dismiss();
       this.showConfirm();
-      this.descripcion = '';
-      this.calificacion = 0;
+      this.comment = '';
+      this.range = 0;
     }, error => {
       this.loading.dismiss();
       this.showError();

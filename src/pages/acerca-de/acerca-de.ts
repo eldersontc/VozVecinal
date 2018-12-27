@@ -10,8 +10,6 @@ export class AcercaDePage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad AcercaDePage');
-  }
+  ionViewDidLoad() {}
 
 }

@@ -22,7 +22,7 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Basura en la vía pública', component: IncidenciaPage, icon: 'megaphone' },
+      { title: 'Basura en la vía pública', component: IncidenciaPage, icon: 'pin' },
       { title: 'Dejar un comentario', component: ComentarioPage, icon: 'chatbubbles' },
       { title: 'Acerca de', component: AcercaDePage, icon: 'information-circle' }
     ];
