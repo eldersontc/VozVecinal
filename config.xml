@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.voz.vecinal.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Voz Vecinal</name>
-    <description>Una aplicación que nuestra voz sea escuchada.</description>
+<widget id="com.voz.cuidadana.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Voz Cuidadana</name>
+    <description>Una aplicación pensada y hecha para el cuidadano.</description>
     <author email="eldersontc@outlook.com / crmenddez@outlook.com" href="">Elderson Taboada / Carlos Mendez</author>
     <content src="index.html" />
     <access origin="*" />

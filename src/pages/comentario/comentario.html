@@ -16,10 +16,10 @@
     </ion-item>
 
     <ion-item>
-      <ion-label stacked>Califica del 1 al 5 la aplicación</ion-label>
-      <ion-range min="1" max="5" pin="true" [(ngModel)]="range" color="info">
-        <ion-icon range-left small name="star" color="info"></ion-icon>
-        <ion-icon range-right name="star" color="info"></ion-icon>
+      <ion-label stacked>Califica la aplicación (1-5)</ion-label>
+      <ion-range min="1" max="5" pin="true" [(ngModel)]="range" color="secondary">
+        <ion-icon range-left small name="remove"></ion-icon>
+        <ion-icon range-right name="add" color="secondary"></ion-icon>
       </ion-range>
     </ion-item>
 
