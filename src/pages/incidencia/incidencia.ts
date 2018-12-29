@@ -30,17 +30,48 @@ export class IncidenciaPage {
   }
 
   ionViewDidLoad() {
-    this.verifyGPS();
+    this.verifyLocation();
+  }
+
+  verifyLocation(){
+    this.diagnostic.isLocationAuthorized().then((data) => {
+      if (data){
+        this.verifyGPS();
+      } else {
+        this.requestLocation();
+      }
+    });
+  }
+
+  requestLocation(){
+    this.diagnostic.requestLocationAuthorization().then((data) => {
+      if (data == 'GRANTED') {
+        this.verifyGPS();
+      }
+    });
   }
 
   enableGps: boolean = false;
 
   verifyGPS() {
     this.diagnostic.isLocationEnabled().then(data => {
-      this.enableGps = data;
-      this.makeMap();
-      if (!data) {
+      if (data){
+        this.enableGps = true
+        this.makeMap();
+      } else {
         this.requestGPS();
+      }
+    });
+  }
+
+  requestGPS() {
+    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+      if (canRequest) {
+        // the accuracy option will be ignored by iOS
+        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(() => {
+          this.enableGps = true;
+          this.makeMap();
+        });
       }
     });
   }
@@ -67,19 +98,6 @@ export class IncidenciaPage {
     });
   }
 
-  requestGPS() {
-    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
-      if (canRequest) {
-        // the accuracy option will be ignored by iOS
-        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(() => {
-          this.enableGps = true;
-          this.map.setMyLocationButtonEnabled(true);
-          this.moveCamera();
-        });
-      }
-    });
-  }
-
   makeMap() {
     this.map = this.googlemaps.create('map_canvas',
       {
@@ -87,15 +105,13 @@ export class IncidenciaPage {
         controls: {
           compass: true,
           myLocation: true,
-          myLocationButton: this.enableGps,
+          myLocationButton: true,
           zoom: true
         }
       });
 
     this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-      if (this.enableGps) {
-        this.moveCamera();
-      }
+      this.moveCamera();
     });
 
     this.map.on(GoogleMapsEvent.MY_LOCATION_BUTTON_CLICK).subscribe(() => {

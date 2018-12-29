@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.voz.cuidadana.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="1" id="com.voz.ciudadana" version="1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Voz Cuidadana</name>
-    <description>Una aplicación pensada y hecha para el cuidadano.</description>
+    <description>Una aplicación pensada y hecha para el ciudadano.</description>
     <author email="eldersontc@outlook.com / crmenddez@outlook.com" href="">Elderson Taboada / Carlos Mendez</author>
     <content src="index.html" />
     <access origin="*" />
@@ -89,6 +89,7 @@
     <plugin name="cordova-plugin-sim" spec="1.3.3" />
     <plugin name="cordova.plugins.diagnostic" spec="4.0.10" />
     <plugin name="cordova-plugin-request-location-accuracy" spec="2.2.3" />
+    <plugin name="cordova-plugin-android-permissions" spec="1.0.0" />
     <engine name="android" spec="7.1.4" />
     <engine name="browser" spec="5.0.4" />
 </widget>
