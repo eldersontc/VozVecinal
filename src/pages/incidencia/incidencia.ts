@@ -27,27 +27,34 @@ export class IncidenciaPage {
     public diagnostic: Diagnostic,
     public locationAccuracy: LocationAccuracy,
     public incidenciaPrv: IncidenciaProvider) {
+      platform.ready().then(() => {
+        this.verifyLocation();
+      });
   }
 
-  ionViewDidLoad() {
-    this.verifyLocation();
-  }
+  ionViewDidLoad() {}
 
   verifyLocation(){
     this.diagnostic.isLocationAuthorized().then((data) => {
+      //alert('VL ' + JSON.stringify(data));
       if (data){
         this.verifyGPS();
       } else {
         this.requestLocation();
       }
+    }).catch(error => {
+      //alert('error VL ' + JSON.stringify(error));
     });
   }
 
   requestLocation(){
     this.diagnostic.requestLocationAuthorization().then((data) => {
+      //alert('RL' + JSON.stringify(data));
       if (data == 'GRANTED') {
         this.verifyGPS();
       }
+    }).catch(error => {
+      //alert('error RL ' + JSON.stringify(error));
     });
   }
 
@@ -55,24 +62,32 @@ export class IncidenciaPage {
 
   verifyGPS() {
     this.diagnostic.isLocationEnabled().then(data => {
+      //alert('VG' + JSON.stringify(data));
       if (data){
         this.enableGps = true
         this.makeMap();
       } else {
         this.requestGPS();
       }
+    }).catch(error => {
+      //alert('error VG ' + JSON.stringify(error));
     });
   }
 
   requestGPS() {
     this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+      //alert('RG ' + canRequest);
       if (canRequest) {
         // the accuracy option will be ignored by iOS
         this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(() => {
           this.enableGps = true;
           this.makeMap();
+        }).catch(error => {
+          //alert('error ELA ' + JSON.stringify(error));
         });
       }
+    }).catch(error => {
+      //alert('error RG ' + JSON.stringify(error));
     });
   }
 
