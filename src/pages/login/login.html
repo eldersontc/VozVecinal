@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Login</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding center text-center>
+    <ion-list>
+      <ion-item>
+        <ion-label color="dark" stacked>Usuario</ion-label>
+        <ion-input [(ngModel)]="usuario"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="dark" stacked>Password</ion-label>
+        <ion-input type="password" [(ngModel)]="password"></ion-input>
+      </ion-item>
+    </ion-list>
+    <div padding>
+      <button ion-button color="primary" (click)="ingresar()" [disabled]="!usuario || !password" block icon-start>
+        <ion-icon name="log-in"></ion-icon>
+        Ingresar
+      </button>
+    </div>
+  </ion-content>

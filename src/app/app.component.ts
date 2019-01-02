@@ -1,14 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, LoadingController, AlertController, Loading } from 'ionic-angular';
+import { Nav, Platform, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { IncidenciaPage } from '../pages/incidencia/incidencia';
-import { ComentarioPage } from '../pages/comentario/comentario';
 import { AcercaDePage } from '../pages/acerca-de/acerca-de';
-import { UsuarioProvider } from '../providers/usuario/usuario';
-import { ListUsuarioPage } from '../pages/list-usuario/list-usuario';
-import { PuntosBasuraPage } from '../pages/puntos-basura/puntos-basura';
+import { ElegirRolPage } from '../pages/elegir-rol/elegir-rol';
 
 @Component({
   templateUrl: 'app.html'
@@ -16,98 +12,37 @@ import { PuntosBasuraPage } from '../pages/puntos-basura/puntos-basura';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any;
+  rootPage: any = ElegirRolPage;
 
   pages: Array<{ title: string, component: any, icon: string }>;
 
   constructor(public platform: Platform,
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
-    public usuarioPrv: UsuarioProvider,
-    public loadingCtrl: LoadingController,
-    public alertCtrl: AlertController) {
+    public events: Events) {
     this.initializeApp();
-  }
-
-  rol: string = undefined;
-  login: boolean = false;
-
-  ciudadano() {
-    this.rol = 'CIUDADANO';
     this.pages = [
-      { title: 'Basura en la vía pública', component: IncidenciaPage, icon: 'pin' },
-      { title: 'Dejar un comentario', component: ComentarioPage, icon: 'chatbubbles' },
       { title: 'Acerca de', component: AcercaDePage, icon: 'information-circle' }
     ];
+    events.subscribe('user:setOptions', (data) => {
+      this.rol = data.rol;
+      this.setOptions(data.opciones);
+    });
+  }
+
+  setOptions(data){
+    this.pages = data;
     this.openPage(this.pages[0]);
   }
 
-  autoridad() {
-    this.rol = 'AUTORIDAD';
-  }
-
-  loading: Loading;
-
-  presentLoading() {
-    this.loading = this.loadingCtrl.create({
-      content: 'Autenticando...'
-    });
-    this.loading.present();
-  }
-
-  showError() {
-    const alert = this.alertCtrl.create({
-      title: 'Error',
-      subTitle: 'Usuario o Password incorrecto.',
-      buttons: ['OK']
-    });
-    alert.present();
-  }
-
-  usuario: string;
-  password: string;
-
-  ingresar() {
-    this.presentLoading();
-    this.usuarioPrv.auth({
-      alias: this.usuario,
-      password: this.password
-    }).subscribe(data => {
-      if (data.perfil == 'ADMINISTRADOR') {
-        this.pages = [
-          { title: 'Puntos de basura', component: PuntosBasuraPage, icon: 'pin' },
-          { title: 'Usuarios', component: ListUsuarioPage, icon: 'people' },
-          { title: 'Acerca de', component: AcercaDePage, icon: 'information-circle' }
-        ];
-      } else {
-        this.pages = [
-          { title: 'Puntos de basura', component: PuntosBasuraPage, icon: 'pin' },
-          { title: 'Acerca de', component: AcercaDePage, icon: 'information-circle' }
-        ];
-      }
-      this.login = true;
-      this.rol = data.perfil;
-      this.openPage(this.pages[0]);
-      this.usuario = '';
-      this.password = '';
-      this.loading.dismiss();
-    }, error => {
-      this.showError();
-      this.loading.dismiss();
-    });
-
-  }
-
-  regresar() {
-    this.rol = undefined;
-    this.usuario = '';
-    this.password = '';
-  }
+  rol: string = undefined;
 
   logout() {
     this.rol = undefined;
-    this.login = false;
-    this.pages = [];
+    this.pages = [
+      { title: 'Acerca de', component: AcercaDePage, icon: 'information-circle' }
+    ];
+    this.nav.setRoot(ElegirRolPage);
   }
 
   initializeApp() {

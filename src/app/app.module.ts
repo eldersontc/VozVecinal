@@ -25,6 +25,8 @@ import { ListUsuarioPage } from '../pages/list-usuario/list-usuario';
 import { UsuarioPage } from '../pages/usuario/usuario';
 import { FotoPage } from '../pages/foto/foto';
 import { PuntosBasuraPage } from '../pages/puntos-basura/puntos-basura';
+import { ElegirRolPage } from '../pages/elegir-rol/elegir-rol';
+import { LoginPage } from '../pages/login/login';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { PuntosBasuraPage } from '../pages/puntos-basura/puntos-basura';
     ListUsuarioPage,
     UsuarioPage,
     FotoPage,
-    PuntosBasuraPage
+    PuntosBasuraPage,
+    ElegirRolPage,
+    LoginPage
   ],
   imports: [
     BrowserModule,
@@ -51,7 +55,9 @@ import { PuntosBasuraPage } from '../pages/puntos-basura/puntos-basura';
     ListUsuarioPage,
     UsuarioPage,
     FotoPage,
-    PuntosBasuraPage
+    PuntosBasuraPage,
+    ElegirRolPage,
+    LoginPage
   ],
   providers: [
     StatusBar,
