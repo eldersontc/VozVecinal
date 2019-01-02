@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>{{usuario.id > 0 ? 'Editar' : 'Nuevo'}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-label color="dark" stacked>Usuario</ion-label>
+      <ion-input [(ngModel)]="usuario.alias"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark" stacked>Password</ion-label>
+      <ion-input type="password" [(ngModel)]="usuario.password"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark" stacked>Perfil</ion-label>
+      <ion-select [(ngModel)]="usuario.perfil">
+        <ion-option value="ADMINISTRADOR">ADMINISTRADOR</ion-option>
+        <ion-option value="RECOLETOR">RECOLETOR</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <div padding>
+    <button ion-button color="primary" (click)="save()" [disabled]="!usuario.alias || !usuario.password" block
+      icon-start>
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+      Guardar
+    </button>
+  </div>
+</ion-content>

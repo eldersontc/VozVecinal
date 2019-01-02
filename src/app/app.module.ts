@@ -20,13 +20,22 @@ import { ComentarioPage } from '../pages/comentario/comentario';
 import { AcercaDePage } from '../pages/acerca-de/acerca-de';
 import { IncidenciaProvider } from '../providers/incidencia/incidencia';
 import { ComentarioProvider } from '../providers/comentario/comentario';
+import { UsuarioProvider } from '../providers/usuario/usuario';
+import { ListUsuarioPage } from '../pages/list-usuario/list-usuario';
+import { UsuarioPage } from '../pages/usuario/usuario';
+import { FotoPage } from '../pages/foto/foto';
+import { PuntosBasuraPage } from '../pages/puntos-basura/puntos-basura';
 
 @NgModule({
   declarations: [
     MyApp,
     IncidenciaPage,
     ComentarioPage,
-    AcercaDePage
+    AcercaDePage,
+    ListUsuarioPage,
+    UsuarioPage,
+    FotoPage,
+    PuntosBasuraPage
   ],
   imports: [
     BrowserModule,
@@ -38,7 +47,11 @@ import { ComentarioProvider } from '../providers/comentario/comentario';
     MyApp,
     IncidenciaPage,
     ComentarioPage,
-    AcercaDePage
+    AcercaDePage,
+    ListUsuarioPage,
+    UsuarioPage,
+    FotoPage,
+    PuntosBasuraPage
   ],
   providers: [
     StatusBar,
@@ -50,7 +63,8 @@ import { ComentarioProvider } from '../providers/comentario/comentario';
     LocationAccuracy,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     IncidenciaProvider,
-    ComentarioProvider
+    ComentarioProvider,
+    UsuarioProvider
   ]
 })
 export class AppModule {}

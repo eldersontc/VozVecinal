@@ -5,12 +5,20 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class IncidenciaProvider {
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient) { }
 
   private apiURL = 'http://190.234.66.232:88/api/incidencia';
 
   create(params: IIncidencia): Observable<boolean> {
-      return this.http.post<boolean>(this.apiURL, params);
+    return this.http.post<boolean>(this.apiURL, params);
+  }
+
+  get(): Observable<IIncidencia[]> {
+    return this.http.get<IIncidencia[]>(this.apiURL);
+  }
+
+  getPhoto(id): Observable<string> {
+    return this.http.get<string>(this.apiURL + '/foto/' + id);
   }
 
 }

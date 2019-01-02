@@ -1,15 +1,19 @@
 <ion-menu [content]="content">
   <ion-header>
     <ion-toolbar color="primary">
-      <ion-title>Opciones</ion-title>
+      <ion-title>{{rol}}</ion-title>
     </ion-toolbar>
   </ion-header>
-  
+
   <ion-content>
     <ion-list>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
         <ion-icon [name]="p.icon" item-start></ion-icon>
         {{p.title}}
+      </button>
+      <button menuClose ion-item (click)="logout()">
+        <ion-icon name="log-out" item-start></ion-icon>
+        Salir
       </button>
     </ion-list>
   </ion-content>
@@ -17,4 +21,50 @@
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
-<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>
+<ion-nav [hidden]="!rol || rol!=='CIUDADANO' && !login" [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>
+
+<ion-header *ngIf="!rol || rol=='AUTORIDAD'">
+  <ion-navbar color="primary">
+    <ion-title text-center>
+      {{rol ? 'Login' : 'Elegir Rol'}}
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content *ngIf="!rol" padding center text-center>
+  <div padding>
+    <button ion-button color="primary" (click)="ciudadano()" block>
+      Ciudadano
+    </button>
+  </div>
+  <div padding>
+    <button ion-button color="secondary" (click)="autoridad()" block>
+      Autoridad
+    </button>
+  </div>
+</ion-content>
+
+<ion-content *ngIf="rol=='AUTORIDAD'" padding center text-center>
+  <ion-list>
+    <ion-item>
+      <ion-label color="dark" stacked>Usuario</ion-label>
+      <ion-input [(ngModel)]="usuario"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="dark" stacked>Password</ion-label>
+      <ion-input type="password" [(ngModel)]="password"></ion-input>
+    </ion-item>
+  </ion-list>
+  <div padding>
+    <button ion-button color="primary" (click)="ingresar()" [disabled]="!usuario || !password" block icon-start>
+      <ion-icon name="log-in"></ion-icon>
+      Ingresar
+    </button>
+  </div>
+  <div padding>
+    <button ion-button color="secondary" (click)="regresar()" block icon-start>
+      <ion-icon name="arrow-back"></ion-icon>
+      Regresar
+    </button>
+  </div>
+</ion-content>
