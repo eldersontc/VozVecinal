@@ -90,15 +90,15 @@ export class PuntosBasuraPage {
     this.map.getMyLocation().then(data => {
       this.map.moveCamera({
         target: data.latLng,
-        zoom: 18,
+        zoom: 14,
       });
     });
   }
 
   showError() {
     const alert = this.alertCtrl.create({
-      title: 'Problema de conexión',
-      subTitle: 'Ocurrió un error en la conexión.',
+      title: 'Error',
+      subTitle: 'Revisa tu conexión a internet.',
       buttons: ['OK']
     });
     alert.present();
@@ -172,7 +172,7 @@ export class PuntosBasuraPage {
     });
 
     this.map.on(GoogleMapsEvent.MY_LOCATION_BUTTON_CLICK).subscribe(() => {
-      this.moveCamera();
+      //this.moveCamera();
     });
   }
 
