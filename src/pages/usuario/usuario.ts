@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, AlertController, Loading } from 'ionic-angular';
-import { IUsuario, UsuarioProvider } from '../../providers/usuario/usuario';
-import { ListUsuarioPage } from '../list-usuario/list-usuario';
+import { UsuarioProvider, IUsuario } from '../../providers/usuario/usuario';
+import { UsuarioDetallePage } from '../usuario-detalle/usuario-detalle';
 
 @Component({
   selector: 'page-usuario',
@@ -9,25 +9,22 @@ import { ListUsuarioPage } from '../list-usuario/list-usuario';
 })
 export class UsuarioPage {
 
-  usuario: IUsuario = { perfil: 'ADMINISTRADOR' };
-
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public usuarioPrv: UsuarioProvider,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController) {
-    if (navParams.data.usuario) {
-      this.usuario = navParams.data.usuario;
-    }
   }
 
-  ionViewDidLoad() { }
+  ionViewDidLoad() {
+    this.get();
+  }
 
   loading: Loading;
 
   presentLoading() {
     this.loading = this.loadingCtrl.create({
-      content: 'Procesando...'
+      content: 'Cargando...'
     });
     this.loading.present();
   }
@@ -41,29 +38,59 @@ export class UsuarioPage {
     alert.present();
   }
 
-  back() {
-    this.navCtrl.setRoot(ListUsuarioPage);
+  data: IUsuario[] = [];
+
+  get() {
+    this.presentLoading();
+    this.usuarioPrv.get().subscribe(data => {
+      this.data = data;
+      this.loading.dismiss();
+    }, error => {
+      this.showError();
+      this.loading.dismiss();
+    });
   }
 
-  save() {
+  edit(d: IUsuario) {
+    this.navCtrl.push(UsuarioDetallePage, { usuario: d });
+  }
+
+  add() {
+    this.navCtrl.push(UsuarioDetallePage);
+  }
+
+  usuario: IUsuario;
+
+  showConfirm(d: IUsuario) {
+    this.usuario = d;
+    const confirm = this.alertCtrl.create({
+      title: 'Eliminar',
+      message: '¿Desea continuar?',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => { }
+        },
+        {
+          text: 'OK',
+          handler: () => {
+            this.delete();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  delete() {
     this.presentLoading();
-    if (this.usuario.id > 0) {
-      this.usuarioPrv.update(this.usuario).subscribe(data => {
-        this.loading.dismiss();
-        this.back();
-      }, error => {
-        this.showError();
-        this.loading.dismiss();
-      });
-    } else {
-      this.usuarioPrv.create(this.usuario).subscribe(data => {
-        this.loading.dismiss();
-        this.back();
-      }, error => {
-        this.showError();
-        this.loading.dismiss();
-      });
-    }
+    this.usuarioPrv.delete(this.usuario.id).subscribe(data => {
+      this.loading.dismiss();
+      this.get();
+    }, error => {
+      this.showError();
+      this.loading.dismiss();
+    });
   }
 
 }

@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, AlertController, Loading, Events } from 'ionic-angular';
 import { UsuarioProvider } from '../../providers/usuario/usuario';
 import { PuntosBasuraPage } from '../puntos-basura/puntos-basura';
-import { ListUsuarioPage } from '../list-usuario/list-usuario';
 import { AcercaDePage } from '../acerca-de/acerca-de';
 import { GlobalProvider } from '../../providers/global/global';
+import { UsuarioPage } from '../usuario/usuario';
+import { MasComentadoPage } from '../mas-comentado/mas-comentado';
 
 @Component({
   selector: 'page-login',
@@ -56,7 +57,8 @@ export class LoginPage {
           rol: data.perfil,
           opciones: [
             { title: 'Puntos de basura', component: PuntosBasuraPage, icon: 'pin' },
-            { title: 'Usuarios', component: ListUsuarioPage, icon: 'people' },
+            { title: 'Más comentado', component: MasComentadoPage, icon: 'star' },
+            { title: 'Usuarios', component: UsuarioPage, icon: 'people' },
             { title: 'Acerca de', component: AcercaDePage, icon: 'information-circle' }
           ]
         });

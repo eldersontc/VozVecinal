@@ -3,3 +3,7 @@
     height: 100%;
     width: 100%;
 }
+
+[ion-fab][disabled] {
+    opacity: 0.5; 
+}

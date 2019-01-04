@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, Events } from 'ionic-angular';
-import { IncidenciaPage } from '../incidencia/incidencia';
 import { ComentarioPage } from '../comentario/comentario';
 import { AcercaDePage } from '../acerca-de/acerca-de';
 import { LoginPage } from '../login/login';
+import { ReportarBasuraPage } from '../reportar-basura/reportar-basura';
 
 @Component({
   selector: 'page-elegir-rol',
@@ -22,7 +22,7 @@ export class ElegirRolPage {
     this.events.publish('user:setOptions', {
       rol: 'CIUDADANO',
       opciones: [
-        { title: 'Basura en la vía pública', component: IncidenciaPage, icon: 'pin' },
+        { title: 'Basura en la vía pública', component: ReportarBasuraPage, icon: 'pin' },
         { title: 'Dejar un comentario', component: ComentarioPage, icon: 'chatbubbles' },
         { title: 'Acerca de', component: AcercaDePage, icon: 'information-circle' }
       ]

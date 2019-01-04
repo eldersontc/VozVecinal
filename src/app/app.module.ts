@@ -15,32 +15,34 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy';
 
 import { HttpClientModule } from '@angular/common/http';
 
-import { IncidenciaPage } from '../pages/incidencia/incidencia';
 import { ComentarioPage } from '../pages/comentario/comentario';
 import { AcercaDePage } from '../pages/acerca-de/acerca-de';
 import { IncidenciaProvider } from '../providers/incidencia/incidencia';
 import { ComentarioProvider } from '../providers/comentario/comentario';
 import { UsuarioProvider } from '../providers/usuario/usuario';
-import { ListUsuarioPage } from '../pages/list-usuario/list-usuario';
 import { UsuarioPage } from '../pages/usuario/usuario';
-import { FotoPage } from '../pages/foto/foto';
 import { PuntosBasuraPage } from '../pages/puntos-basura/puntos-basura';
 import { ElegirRolPage } from '../pages/elegir-rol/elegir-rol';
 import { LoginPage } from '../pages/login/login';
 import { GlobalProvider } from '../providers/global/global';
+import { ReportarBasuraPage } from '../pages/reportar-basura/reportar-basura';
+import { UsuarioDetallePage } from '../pages/usuario-detalle/usuario-detalle';
+import { FotoBasuraPage } from '../pages/foto-basura/foto-basura';
+import { MasComentadoPage } from '../pages/mas-comentado/mas-comentado';
 
 @NgModule({
   declarations: [
     MyApp,
-    IncidenciaPage,
+    ReportarBasuraPage,
     ComentarioPage,
     AcercaDePage,
-    ListUsuarioPage,
+    UsuarioDetallePage,
     UsuarioPage,
-    FotoPage,
+    FotoBasuraPage,
     PuntosBasuraPage,
     ElegirRolPage,
-    LoginPage
+    LoginPage,
+    MasComentadoPage
   ],
   imports: [
     BrowserModule,
@@ -50,15 +52,16 @@ import { GlobalProvider } from '../providers/global/global';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    IncidenciaPage,
+    ReportarBasuraPage,
     ComentarioPage,
     AcercaDePage,
-    ListUsuarioPage,
+    UsuarioDetallePage,
     UsuarioPage,
-    FotoPage,
+    FotoBasuraPage,
     PuntosBasuraPage,
     ElegirRolPage,
-    LoginPage
+    LoginPage,
+    MasComentadoPage
   ],
   providers: [
     StatusBar,

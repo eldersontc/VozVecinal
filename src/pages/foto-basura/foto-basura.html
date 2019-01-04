@@ -3,6 +3,6 @@
     <ion-title>Foto</ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content>
+<ion-content [hidden]="!base64">
   <img src="data:image/jpeg;base64,{{base64}}">
 </ion-content>

@@ -5,12 +5,16 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class ComentarioProvider {
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient) { }
 
   private apiURL = 'http://190.234.66.232:88/api/comentario';
 
   create(params: IComentario): Observable<boolean> {
-      return this.http.post<boolean>(this.apiURL, params);
+    return this.http.post<boolean>(this.apiURL, params);
+  }
+
+  get(): Observable<IComentario[]> {
+    return this.http.get<IComentario[]>(this.apiURL);
   }
 
 }

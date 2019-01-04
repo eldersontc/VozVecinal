@@ -1,32 +1,44 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>{{usuario.id > 0 ? 'Editar' : 'Nuevo'}}</ion-title>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Usuarios</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="add()">
+        <ion-icon name="person-add"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-list>
-    <ion-item>
-      <ion-label color="dark" stacked>Usuario</ion-label>
-      <ion-input [(ngModel)]="usuario.alias"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="dark" stacked>Password</ion-label>
-      <ion-input type="password" [(ngModel)]="usuario.password"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="dark" stacked>Perfil</ion-label>
-      <ion-select [(ngModel)]="usuario.perfil">
-        <ion-option value="ADMINISTRADOR">ADMINISTRADOR</ion-option>
-        <ion-option value="RECOLETOR">RECOLETOR</ion-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
-  <div padding>
-    <button ion-button color="primary" (click)="save()" [disabled]="!usuario.alias || !usuario.password" block
-      icon-start>
-      <ion-icon name="checkmark-circle-outline"></ion-icon>
-      Guardar
-    </button>
-  </div>
+<ion-content>
+
+  <ion-card *ngFor="let d of data">
+
+    <ion-card-content>
+      <ion-card-title>
+        {{d.alias}}
+      </ion-card-title>
+      <p>
+        {{d.perfil}}
+      </p>
+    </ion-card-content>
+
+    <ion-row no-padding>
+      <ion-col>
+        <button ion-button clear small color="primary" (click)="edit(d)" icon-start>
+          <ion-icon name='create'></ion-icon>
+          Editar
+        </button>
+      </ion-col>
+      <ion-col>
+        <button ion-button clear small color="danger" (click)="showConfirm(d)" icon-start>
+          <ion-icon name='trash'></ion-icon>
+          Eliminar
+        </button>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
 </ion-content>

@@ -3,14 +3,14 @@ import { NavController, NavParams, LoadingController, AlertController, Loading }
 import { IncidenciaProvider } from '../../providers/incidencia/incidencia';
 
 @Component({
-  selector: 'page-foto',
-  templateUrl: 'foto.html',
+  selector: 'page-foto-basura',
+  templateUrl: 'foto-basura.html',
 })
-export class FotoPage {
+export class FotoBasuraPage {
 
   base64: string;
 
-  constructor(public navCtrl: NavController, 
+  constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public incidenciaPrv: IncidenciaProvider,
     public loadingCtrl: LoadingController,
@@ -36,7 +36,7 @@ export class FotoPage {
     alert.present();
   }
 
-  get(id){
+  get(id) {
     this.presentLoading();
     this.incidenciaPrv.getPhoto(id).subscribe(data => {
       this.base64 = data;
@@ -47,6 +47,6 @@ export class FotoPage {
     });
   }
 
-  ionViewDidLoad() {}
+  ionViewDidLoad() { }
 
 }

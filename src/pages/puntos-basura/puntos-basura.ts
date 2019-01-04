@@ -4,8 +4,8 @@ import { GoogleMapsEvent, GoogleMaps, GoogleMap, Marker, Poly, Polygon, ILatLng,
 import { Diagnostic } from '@ionic-native/diagnostic';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { IncidenciaProvider, IIncidencia } from '../../providers/incidencia/incidencia';
-import { FotoPage } from '../foto/foto';
 import { GlobalProvider } from '../../providers/global/global';
+import { FotoBasuraPage } from '../foto-basura/foto-basura';
 
 @Component({
   selector: 'page-puntos-basura',
@@ -168,7 +168,7 @@ export class PuntosBasuraPage {
           let marker: Marker = params[1];
           let id: number = marker.get("name");
           if (id > 0) {
-            this.navCtrl.push(FotoPage, { id: id });
+            this.navCtrl.push(FotoBasuraPage, { id: id });
           } else {
             marker.setTitle('Foto no disponible');
             marker.showInfoWindow();

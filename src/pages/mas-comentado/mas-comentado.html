@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Más comentado</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      Calificación promedio
+      <ion-icon name="star"></ion-icon> 
+      {{calificacion}}
+    </ion-list-header>
+    <ion-list-header>
+      Palabras más escritas
+    </ion-list-header>
+    <ion-item *ngFor="let d of data">
+      {{d.descripcion}}
+      <ion-badge color="secondary" item-end>{{d.id}}</ion-badge>
+    </ion-item>
+  </ion-list>
+
+</ion-content>.

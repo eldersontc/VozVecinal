@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, Platform, ActionSheetController, LoadingController, AlertController, Loading } from 'ionic-angular';
-import { GoogleMap, GoogleMaps, GoogleMapsEvent, Marker } from '@ionic-native/google-maps';
+import { GoogleMap, GoogleMaps, Marker, GoogleMapsEvent } from '@ionic-native/google-maps';
 import { Camera } from '@ionic-native/camera';
 import { Device } from '@ionic-native/device';
 import { Diagnostic } from '@ionic-native/diagnostic';
@@ -8,10 +8,10 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { IncidenciaProvider } from '../../providers/incidencia/incidencia';
 
 @Component({
-  selector: 'page-incidencia',
-  templateUrl: 'incidencia.html',
+  selector: 'page-reportar-basura',
+  templateUrl: 'reportar-basura.html',
 })
-export class IncidenciaPage {
+export class ReportarBasuraPage {
 
   map: GoogleMap;
 
@@ -27,17 +27,17 @@ export class IncidenciaPage {
     public diagnostic: Diagnostic,
     public locationAccuracy: LocationAccuracy,
     public incidenciaPrv: IncidenciaProvider) {
-      platform.ready().then(() => {
-        this.verifyLocation();
-      });
+    platform.ready().then(() => {
+      this.verifyLocation();
+    });
   }
 
-  ionViewDidLoad() {}
+  ionViewDidLoad() { }
 
-  verifyLocation(){
+  verifyLocation() {
     this.diagnostic.isLocationAuthorized().then((data) => {
       //alert('VL ' + JSON.stringify(data));
-      if (data){
+      if (data) {
         this.verifyGPS();
       } else {
         this.requestLocation();
@@ -47,7 +47,7 @@ export class IncidenciaPage {
     });
   }
 
-  requestLocation(){
+  requestLocation() {
     this.diagnostic.requestLocationAuthorization().then((data) => {
       //alert('RL' + JSON.stringify(data));
       if (data == 'GRANTED') {
@@ -63,7 +63,7 @@ export class IncidenciaPage {
   verifyGPS() {
     this.diagnostic.isLocationEnabled().then(data => {
       //alert('VG' + JSON.stringify(data));
-      if (data){
+      if (data) {
         this.enableGps = true
         this.makeMap();
       } else {
