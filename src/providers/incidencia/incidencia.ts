@@ -21,6 +21,10 @@ export class IncidenciaProvider {
     return this.http.get<string>(this.apiURL + '/foto/' + id);
   }
 
+  delete(params: IIncidencia[]) {
+    return this.http.post<boolean>(this.apiURL + '/delete', params);
+  }
+
 }
 
 export interface IIncidencia {

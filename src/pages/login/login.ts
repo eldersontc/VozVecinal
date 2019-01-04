@@ -4,6 +4,7 @@ import { UsuarioProvider } from '../../providers/usuario/usuario';
 import { PuntosBasuraPage } from '../puntos-basura/puntos-basura';
 import { ListUsuarioPage } from '../list-usuario/list-usuario';
 import { AcercaDePage } from '../acerca-de/acerca-de';
+import { GlobalProvider } from '../../providers/global/global';
 
 @Component({
   selector: 'page-login',
@@ -16,7 +17,8 @@ export class LoginPage {
     public usuarioPrv: UsuarioProvider,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
-    public events: Events) {
+    public events: Events,
+    public global: GlobalProvider) {
   }
 
   ionViewDidLoad() { }
@@ -48,6 +50,7 @@ export class LoginPage {
       alias: this.usuario,
       password: this.password
     }).subscribe(data => {
+      this.global.idUsuario = data.id;
       if (data.perfil == 'ADMINISTRADOR') {
         this.events.publish('user:setOptions', {
           rol: data.perfil,

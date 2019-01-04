@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams, Platform, AlertController } from 'ionic-angular';
-import { GoogleMapsEvent, GoogleMaps, GoogleMap, Marker } from '@ionic-native/google-maps';
+import { Component, NgZone } from '@angular/core';
+import { NavController, NavParams, Platform, AlertController, RadioGroup, Loading, LoadingController, FabContainer } from 'ionic-angular';
+import { GoogleMapsEvent, GoogleMaps, GoogleMap, Marker, Poly, Polygon, ILatLng, BaseArrayClass } from '@ionic-native/google-maps';
 import { Diagnostic } from '@ionic-native/diagnostic';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { IncidenciaProvider, IIncidencia } from '../../providers/incidencia/incidencia';
 import { FotoPage } from '../foto/foto';
+import { GlobalProvider } from '../../providers/global/global';
 
 @Component({
   selector: 'page-puntos-basura',
@@ -17,22 +18,25 @@ export class PuntosBasuraPage {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public platform: Platform,
+    public loadingCtrl: LoadingController,
     public googlemaps: GoogleMaps,
     public diagnostic: Diagnostic,
     public locationAccuracy: LocationAccuracy,
     public alertCtrl: AlertController,
-    public incidenciaPrv: IncidenciaProvider) {
-      platform.ready().then(() => {
-        this.verifyLocation();
-      });
+    public incidenciaPrv: IncidenciaProvider,
+    private zone: NgZone,
+    public global: GlobalProvider) {
+    platform.ready().then(() => {
+      this.verifyLocation();
+    });
   }
 
-  ionViewDidLoad() {}
+  ionViewDidLoad() { }
 
-  verifyLocation(){
+  verifyLocation() {
     this.diagnostic.isLocationAuthorized().then((data) => {
       //alert('VL ' + JSON.stringify(data));
-      if (data){
+      if (data) {
         this.verifyGPS();
       } else {
         this.requestLocation();
@@ -42,7 +46,7 @@ export class PuntosBasuraPage {
     });
   }
 
-  requestLocation(){
+  requestLocation() {
     this.diagnostic.requestLocationAuthorization().then((data) => {
       //alert('RL' + JSON.stringify(data));
       if (data == 'GRANTED') {
@@ -58,7 +62,7 @@ export class PuntosBasuraPage {
   verifyGPS() {
     this.diagnostic.isLocationEnabled().then(data => {
       //alert('VG' + JSON.stringify(data));
-      if (data){
+      if (data) {
         this.enableGps = true
         this.makeMap();
       } else {
@@ -95,6 +99,15 @@ export class PuntosBasuraPage {
     });
   }
 
+  loading: Loading;
+
+  presentLoading(msg: string) {
+    this.loading = this.loadingCtrl.create({
+      content: msg
+    });
+    this.loading.present();
+  }
+
   showError() {
     const alert = this.alertCtrl.create({
       title: 'Error',
@@ -104,21 +117,31 @@ export class PuntosBasuraPage {
     alert.present();
   }
 
-  get(){
+  get() {
+    this.presentLoading('Cargando...');
     this.incidenciaPrv.get().subscribe(data => {
-      this.addMarkets(data);
+      this.loading.dismiss();
+      this.locations = [];
+      for (let d of data) {
+        this.locations.push({
+          name: d.id,
+          position: {
+            lat: +d.latitud,
+            lng: +d.longitud
+          },
+          icon: "assets/imgs/basura.png"
+        });
+      }
+      this.addMarkets();
     }, error => {
+      this.loading.dismiss();
       this.showError();
     });
   }
 
-  private locations: Array<any> = [];
+  locations: Array<any> = [];
 
-  addMarkets(data: IIncidencia[]){
-
-    for(let d of data){
-      this.locations.push({name: d.id, position: {lat: +d.latitud, lng: +d.longitud}});
-    }
+  addMarkets() {
 
     this.map.addMarkerCluster({
       markers: this.locations,
@@ -141,17 +164,97 @@ export class PuntosBasuraPage {
       ]
     }).then((markerCluster) => {
       markerCluster.on(GoogleMapsEvent.MARKER_CLICK).subscribe((params) => {
-        let marker: Marker = params[1];
-        let id: number = marker.get("name");
-        if (id > 0){
-          this.navCtrl.push(FotoPage, { id: id });
-        } else{
-          marker.setTitle('Foto no disponible');
-          marker.showInfoWindow();
+        if (!this.makePolygon) {
+          let marker: Marker = params[1];
+          let id: number = marker.get("name");
+          if (id > 0) {
+            this.navCtrl.push(FotoPage, { id: id });
+          } else {
+            marker.setTitle('Foto no disponible');
+            marker.showInfoWindow();
+          }
         }
       });
     });
 
+  }
+
+  makePolygon = false;
+
+  showOptions() {
+    this.makePolygon = !this.makePolygon;
+    if (!this.makePolygon) {
+      this.cancelPolygon();
+      this.addMarkets();
+    }
+  }
+
+  points: ILatLng[] = []
+
+  polygon: Polygon;
+
+  createPolygon() {
+    this.polygon = this.map.addPolygonSync({
+      'points': this.points,
+      'strokeColor': '#FF0041',
+      'fillColor': '#E77B96',
+      'strokeWidth': 5
+    });
+    this.points = [];
+  }
+
+  cancelPolygon() {
+    this.polygon = undefined;
+    this.points = [];
+    this.makePolygon = false;
+    this.map.clear();
+  }
+
+  showConfirm(fab: FabContainer) {
+    this.fab = fab;
+    const confirm = this.alertCtrl.create({
+      title: 'Eliminar',
+      message: '¿Desea continuar?',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => { }
+        },
+        {
+          text: 'OK',
+          handler: () => {
+            this.delete();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  fab: FabContainer;
+
+  delete() {
+    let points: BaseArrayClass<ILatLng> = this.polygon.getPoints();
+    let data: IIncidencia[] = [];
+    for (let l of this.locations) {
+      if (Poly.containsLocation(l.position, points.getArray())) {
+        data.push({
+          id: this.global.idUsuario,
+          latitud: l.position.lat,
+          longitud: l.position.lng
+        });
+      }
+    }
+    this.presentLoading('Eliminando...');
+    this.incidenciaPrv.delete(data).subscribe(() => {
+      this.loading.dismiss();
+      this.fab.close();
+      this.cancelPolygon();
+      this.get();
+    }, error => {
+      this.loading.dismiss();
+      this.showError();
+    });
   }
 
   makeMap() {
@@ -171,8 +274,27 @@ export class PuntosBasuraPage {
       this.get();
     });
 
-    this.map.on(GoogleMapsEvent.MY_LOCATION_BUTTON_CLICK).subscribe(() => {
-      //this.moveCamera();
+    this.map.on(GoogleMapsEvent.MAP_CLICK).subscribe((params) => {
+      if (this.makePolygon && !this.polygon) {
+        this.zone.run(() => {
+          this.points.push(params[0]);
+        });
+        var idx = this.points.length - 1;
+        let marker: Marker = this.map.addMarkerSync({
+          icon: "assets/imgs/pin.png",
+          animation: 'DROP',
+          position: params[0],
+          draggable: true
+        });
+        marker.on(GoogleMapsEvent.MARKER_DRAG).subscribe((params) => {
+          if (this.polygon) {
+            let points: BaseArrayClass<ILatLng> = this.polygon.getPoints();
+            points.setAt(idx, params[0]);
+          } else {
+            this.points[idx] = params[0];
+          }
+        });
+      }
     });
   }
 

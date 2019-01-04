@@ -8,12 +8,26 @@
 </ion-header>
 
 <ion-content>
+
   <div id="map_canvas">
     <div padding>
-      <button *ngIf="!enableGps" ion-button color="light" (click)="solicitarGps()" icon-end>
+      <button [hidden]="enableGps" ion-button color="light" (click)="solicitarGps()" icon-end>
         Activar los servicios de ubicación
         <ion-icon name='arrow-forward'></ion-icon>
       </button>
     </div>
+    <ion-fab left middle #fab [hidden]="!enableGps">
+      <button ion-fab color="secondary" (click)="showOptions()">
+        <ion-icon name='create'></ion-icon>
+      </button>
+      <ion-fab-list side="top">
+        <button ion-fab color="light" (click)="createPolygon()" [disabled]="points.length < 3">
+          <ion-icon name='checkmark'></ion-icon>
+        </button>
+        <button ion-fab color="light" (click)="showConfirm(fab)" [disabled]="!polygon">
+          <ion-icon name='trash'></ion-icon>
+        </button>
+      </ion-fab-list>
+    </ion-fab>
   </div>
 </ion-content>

@@ -27,6 +27,7 @@ import { FotoPage } from '../pages/foto/foto';
 import { PuntosBasuraPage } from '../pages/puntos-basura/puntos-basura';
 import { ElegirRolPage } from '../pages/elegir-rol/elegir-rol';
 import { LoginPage } from '../pages/login/login';
+import { GlobalProvider } from '../providers/global/global';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { LoginPage } from '../pages/login/login';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     IncidenciaProvider,
     ComentarioProvider,
-    UsuarioProvider
+    UsuarioProvider,
+    GlobalProvider
   ]
 })
 export class AppModule {}
